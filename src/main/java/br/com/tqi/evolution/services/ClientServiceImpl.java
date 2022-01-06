@@ -22,6 +22,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -87,6 +88,8 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
     public void requestBorrowing(String email, Double value, ZonedDateTime firstInstallmentDate, int numberOfInstallments) throws Exception {
         RequestBorrowing requestBorrowing = new RequestBorrowing();
         Borrow borrow = requestBorrowing.execute(value, firstInstallmentDate, numberOfInstallments);
+        String code = UUID.randomUUID().toString();
+        borrow.setCode(code);
         borrowRepository.save(borrow);
         Client client = clientRepository.findByEmail(email);
         client.getBorrows().add(borrow);

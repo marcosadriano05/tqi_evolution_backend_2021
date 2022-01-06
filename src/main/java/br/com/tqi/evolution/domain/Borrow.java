@@ -18,7 +18,7 @@ public class Borrow {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long code;
+    private String code;
     private Double value;
     private ZonedDateTime firstInstallmentDate;
     private int numberOfInstallments;
