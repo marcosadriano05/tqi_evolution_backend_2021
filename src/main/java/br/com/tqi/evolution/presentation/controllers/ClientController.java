@@ -1,5 +1,6 @@
 package br.com.tqi.evolution.presentation.controllers;
 
+import br.com.tqi.evolution.domain.Borrow;
 import br.com.tqi.evolution.domain.Client;
 import br.com.tqi.evolution.domain.Role;
 import br.com.tqi.evolution.presentation.dtos.RequestBorrowingDTO;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/client")
@@ -55,5 +59,13 @@ public class ClientController {
             System.out.println(exception.getMessage());
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/borrow")
+    ResponseEntity<List<Borrow>> getBorrows (Authentication authentication) {
+        String email = authentication.getName();
+        System.out.println(email);
+        List<Borrow> borrows = new ArrayList<>(clientService.getClient(email).getBorrows());
+        return ResponseEntity.ok().body(borrows);
     }
 }
