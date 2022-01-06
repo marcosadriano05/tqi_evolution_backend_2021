@@ -1,9 +1,12 @@
 package br.com.tqi.evolution.services;
 
+import br.com.tqi.evolution.domain.Borrow;
 import br.com.tqi.evolution.domain.Client;
 import br.com.tqi.evolution.domain.Role;
+import br.com.tqi.evolution.repositories.BorrowRepository;
 import br.com.tqi.evolution.repositories.RoleRepository;
 import br.com.tqi.evolution.repositories.ClientRepository;
+import br.com.tqi.evolution.usecases.RequestBorrowing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +30,7 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService, UserDetailsService {
     private final ClientRepository clientRepository;
     private final RoleRepository roleRepository;
+    private final BorrowRepository borrowRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -76,5 +81,14 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
     public List<Client> getClients() {
         log.info("Getting all users");
         return clientRepository.findAll();
+    }
+
+    @Override
+    public void requestBorrowing(String email, Double value, ZonedDateTime firstInstallmentDate, int numberOfInstallments) throws Exception {
+        RequestBorrowing requestBorrowing = new RequestBorrowing();
+        Borrow borrow = requestBorrowing.execute(value, firstInstallmentDate, numberOfInstallments);
+        borrowRepository.save(borrow);
+        Client client = clientRepository.findByEmail(email);
+        client.getBorrows().add(borrow);
     }
 }

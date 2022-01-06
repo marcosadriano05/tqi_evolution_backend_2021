@@ -1,15 +1,15 @@
-package br.com.tqi.evolution.presentation;
+package br.com.tqi.evolution.presentation.controllers;
 
 import br.com.tqi.evolution.domain.Client;
 import br.com.tqi.evolution.domain.Role;
+import br.com.tqi.evolution.presentation.dtos.RequestBorrowingDTO;
+import br.com.tqi.evolution.presentation.dtos.RoleToClientDTO;
 import br.com.tqi.evolution.services.ClientService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -56,17 +56,4 @@ public class ClientController {
             return ResponseEntity.internalServerError().build();
         }
     }
-}
-
-@Data
-class RoleToClientDTO {
-    private String email;
-    private String roleName;
-}
-
-@Data
-class RequestBorrowingDTO {
-    private Double value;
-    private Date firstInstallmentDate;
-    private int numberOfInstallments;
 }

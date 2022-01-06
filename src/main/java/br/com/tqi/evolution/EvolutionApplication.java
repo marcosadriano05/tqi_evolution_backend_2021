@@ -28,9 +28,9 @@ public class EvolutionApplication {
 	@Bean
 	CommandLineRunner run (ClientService clientService) {
 		return args -> {
-			clientService.saveClient(new Client(null, "Marcos Adriano", "marcos@email.com", "123", "99999999999", "888888888", "Rua", 500.0, new ArrayList<>()));
-			clientService.saveClient(new Client(null, "Diegod", "diego@email.com", "123", "99999999999", "888888888", "Rua", 500.0, new ArrayList<>()));
-			clientService.saveClient(new Client(null, "Angelin", "angelin@email.com", "123", "99999999999", "888888888", "Rua", 500.0, new ArrayList<>()));
+			clientService.saveClient(new Client(null, "Marcos Adriano", "marcos@email.com", "123", "99999999999", "888888888", "Rua", 500.0, new ArrayList<>(), new ArrayList<>()));
+			clientService.saveClient(new Client(null, "Diegod", "diego@email.com", "123", "99999999999", "888888888", "Rua", 500.0, new ArrayList<>(), new ArrayList<>()));
+			clientService.saveClient(new Client(null, "Angelin", "angelin@email.com", "123", "99999999999", "888888888", "Rua", 500.0, new ArrayList<>(), new ArrayList<>()));
 
 			clientService.saveRole(new Role(null, "ROLE_CLIENT"));
 			clientService.saveRole(new Role(null, "ROLE_ADMIN"));

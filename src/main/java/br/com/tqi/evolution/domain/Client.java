@@ -23,6 +23,10 @@ public class Client {
     private String rg;
     private String address;
     private Double rent;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Collection<Borrow> borrows = new ArrayList<>();
 }
