@@ -1,5 +1,6 @@
 package br.com.tqi.evolution.services;
 
+import br.com.tqi.evolution.domain.Borrow;
 import br.com.tqi.evolution.domain.Role;
 import br.com.tqi.evolution.domain.Client;
 
@@ -13,4 +14,5 @@ public interface ClientService {
     Client getClient (String email);
     List<Client> getClients ();
     void requestBorrowing (String email, Double value, ZonedDateTime firstInstallmentDate, int numberOfInstallments) throws Exception;
+    Borrow getBorrow (Long borrowId) throws Exception;
 }

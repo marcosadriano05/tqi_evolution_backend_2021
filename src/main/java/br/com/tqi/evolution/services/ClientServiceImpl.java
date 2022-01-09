@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -93,5 +90,14 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
         borrowRepository.save(borrow);
         Client client = clientRepository.findByEmail(email);
         client.getBorrows().add(borrow);
+    }
+
+    @Override
+    public Borrow getBorrow(Long borrowId) throws Exception {
+        Optional<Borrow> borrowOptional = borrowRepository.findById(borrowId);
+        if (borrowOptional.isEmpty()) {
+            throw new Exception("Borrow not found");
+        }
+        return borrowOptional.get();
     }
 }

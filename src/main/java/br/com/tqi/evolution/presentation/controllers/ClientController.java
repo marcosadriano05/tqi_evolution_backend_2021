@@ -7,6 +7,7 @@ import br.com.tqi.evolution.presentation.dtos.RequestBorrowingDTO;
 import br.com.tqi.evolution.presentation.dtos.RoleToClientDTO;
 import br.com.tqi.evolution.services.ClientService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/client")
 @RequiredArgsConstructor
+@Slf4j
 public class ClientController {
     private final ClientService clientService;
 
@@ -50,13 +50,12 @@ public class ClientController {
     ResponseEntity<?> requestBorrowing (@RequestBody RequestBorrowingDTO requestBorrowingDTO, Authentication authentication) {
         try {
             String email = authentication.getName();
-            System.out.println(email);
             Date date = requestBorrowingDTO.getFirstInstallmentDate();
             ZonedDateTime dateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("UTC"));
             clientService.requestBorrowing(email, requestBorrowingDTO.getValue(), dateTime, requestBorrowingDTO.getNumberOfInstallments());
             return ResponseEntity.ok().build();
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());
+            log.error("Error to request a borrow: {}", exception.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -64,8 +63,18 @@ public class ClientController {
     @GetMapping("/borrow")
     ResponseEntity<List<Borrow>> getBorrows (Authentication authentication) {
         String email = authentication.getName();
-        System.out.println(email);
         List<Borrow> borrows = new ArrayList<>(clientService.getClient(email).getBorrows());
         return ResponseEntity.ok().body(borrows);
+    }
+
+    @GetMapping("/borrow/{borrowId}")
+    ResponseEntity<Borrow> getBorrow (@PathVariable Long borrowId) {
+        try {
+            Borrow borrow = clientService.getBorrow(borrowId);
+            return ResponseEntity.ok().body(borrow);
+        } catch (Exception exception) {
+            log.error("Error to get a borrow: {}", exception.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 }
