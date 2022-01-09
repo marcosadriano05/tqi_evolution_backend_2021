@@ -3,36 +3,50 @@ package br.com.tqi.evolution.presentation.controllers;
 import br.com.tqi.evolution.domain.Borrow;
 import br.com.tqi.evolution.domain.Client;
 import br.com.tqi.evolution.domain.Role;
+import br.com.tqi.evolution.presentation.dtos.ClientDTO;
 import br.com.tqi.evolution.presentation.dtos.RequestBorrowingDTO;
 import br.com.tqi.evolution.presentation.dtos.RoleToClientDTO;
 import br.com.tqi.evolution.services.ClientService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/client")
 @RequiredArgsConstructor
-@Slf4j
 public class ClientController {
     private final ClientService clientService;
 
     @GetMapping
-    ResponseEntity<List<Client>> getClients () {
-        return ResponseEntity.ok().body(clientService.getClients());
+    ResponseEntity<List<ClientDTO>> getClients () {
+        List<Client> clients = clientService.getClients();
+        List<ClientDTO> clientsDTO = clients.stream().map(ClientDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(clientsDTO);
     }
 
     @PostMapping
-    ResponseEntity<Client> saveClient (@RequestBody Client client) {
-        return ResponseEntity.ok().body(clientService.saveClient(client));
+    ResponseEntity<ClientDTO> saveClient (@RequestBody Client client) {
+        Client savedClient = clientService.saveClient(client);
+        URI uri = URI.create("http://localhost.com:8080/client/" + savedClient.getId());
+        return ResponseEntity.created(uri).body(new ClientDTO(savedClient));
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<Client> getClients (@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok().body(clientService.getClientById(id));
+        } catch (Exception exception) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/role")
@@ -55,7 +69,6 @@ public class ClientController {
             clientService.requestBorrowing(email, requestBorrowingDTO.getValue(), dateTime, requestBorrowingDTO.getNumberOfInstallments());
             return ResponseEntity.ok().build();
         } catch (Exception exception) {
-            log.error("Error to request a borrow: {}", exception.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -73,7 +86,6 @@ public class ClientController {
             Borrow borrow = clientService.getBorrow(borrowId);
             return ResponseEntity.ok().body(borrow);
         } catch (Exception exception) {
-            log.error("Error to get a borrow: {}", exception.getMessage());
             return ResponseEntity.notFound().build();
         }
     }

@@ -12,6 +12,7 @@ public interface ClientService {
     Role saveRole (Role role);
     void addRoleToClient (String email, String roleName);
     Client getClient (String email);
+    Client getClientById (Long id) throws Exception;
     List<Client> getClients ();
     void requestBorrowing (String email, Double value, ZonedDateTime firstInstallmentDate, int numberOfInstallments) throws Exception;
     Borrow getBorrow (Long borrowId) throws Exception;

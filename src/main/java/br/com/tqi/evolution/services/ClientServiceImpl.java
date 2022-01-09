@@ -76,6 +76,16 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
     }
 
     @Override
+    public Client getClientById(Long id) throws Exception {
+        Optional<Client> clientOptional = clientRepository.findById(id);
+        if (clientOptional.isEmpty()) {
+            log.error("Client not found with id: {}", id);
+            throw new Exception("Client not found");
+        }
+        return clientOptional.get();
+    }
+
+    @Override
     public List<Client> getClients() {
         log.info("Getting all users");
         return clientRepository.findAll();
@@ -83,6 +93,7 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
 
     @Override
     public void requestBorrowing(String email, Double value, ZonedDateTime firstInstallmentDate, int numberOfInstallments) throws Exception {
+        log.info("Reuquest borrow to user: {}", email);
         RequestBorrowing requestBorrowing = new RequestBorrowing();
         Borrow borrow = requestBorrowing.execute(value, firstInstallmentDate, numberOfInstallments);
         String code = UUID.randomUUID().toString();
@@ -96,6 +107,7 @@ public class ClientServiceImpl implements ClientService, UserDetailsService {
     public Borrow getBorrow(Long borrowId) throws Exception {
         Optional<Borrow> borrowOptional = borrowRepository.findById(borrowId);
         if (borrowOptional.isEmpty()) {
+            log.error("Error to get borrow to user: {}", borrowId);
             throw new Exception("Borrow not found");
         }
         return borrowOptional.get();
