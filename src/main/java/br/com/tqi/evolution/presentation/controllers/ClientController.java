@@ -41,9 +41,15 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Client> getClients (@PathVariable Long id) {
+    ResponseEntity<Client> getClient (Authentication authentication, @PathVariable Long id) {
         try {
-            return ResponseEntity.ok().body(clientService.getClientById(id));
+            Client client = clientService.getClientById(id);
+            Client clientWithMadeRequest = clientService.getClient((String) authentication.getPrincipal());
+            List<String> roleNames = clientWithMadeRequest.getRoles().stream().map(Role::getName).collect(Collectors.toList());
+            if (!(roleNames.contains("ROLE_ADMIN") || client.getEmail().equals(authentication.getPrincipal()))) {
+                return ResponseEntity.status(403).build();
+            }
+            return ResponseEntity.ok().body(client);
         } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }
