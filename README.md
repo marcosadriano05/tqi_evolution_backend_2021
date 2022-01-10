@@ -55,7 +55,7 @@ Ao se cadastrar, o client pode fazer o login e nele pedir empréstimos, esses em
 java -jar {nome_do_arquivo_jar}
 ```
 
-### Utilizando o Docker no terminal Bash
+### Utilizando o Docker no terminal Bash (Script)
 
 - Maven para a build e geração do arquivo jar do projeto.
 - Docker.
@@ -63,6 +63,24 @@ java -jar {nome_do_arquivo_jar}
 - No terminal, na pasta do projeto, execute o script init.sh com o comando:
 ```shell
 bash init.sh
+```
+
+### Utilizando o Docker manualmente
+
+- Maven para a build e geração do arquivo jar do projeto.
+- Docker.
+- Docker compose.
+- No terminal, na pasta do projeto, execute o script init.sh com o comando:
+```shell
+./mvnw clean package -DskipTests
+```
+- Na pasta ./target será criado o arquivo jar do projeto, faça uma cópia para a pasta do projeto:
+```shell
+cp ./target/{nome_do_arquivo_jar} ./
+```
+- Execute o comando do docker compose para gerar a imagem do projeto e criar os containers necessários para a aplicação rodar:
+```shell
+docker-compose up
 ```
 
 ## Rotas
