@@ -6,7 +6,7 @@ import br.com.tqi.evolution.domain.Role;
 import br.com.tqi.evolution.repositories.BorrowRepository;
 import br.com.tqi.evolution.repositories.RoleRepository;
 import br.com.tqi.evolution.repositories.ClientRepository;
-import br.com.tqi.evolution.usecases.RequestBorrowing;
+import br.com.tqi.evolution.domain.usecases.RequestBorrowing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

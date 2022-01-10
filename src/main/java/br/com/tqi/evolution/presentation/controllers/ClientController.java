@@ -3,11 +3,13 @@ package br.com.tqi.evolution.presentation.controllers;
 import br.com.tqi.evolution.domain.Borrow;
 import br.com.tqi.evolution.domain.Client;
 import br.com.tqi.evolution.domain.Role;
+import br.com.tqi.evolution.presentation.dtos.ClientAllInfoDTO;
 import br.com.tqi.evolution.presentation.dtos.ClientDTO;
 import br.com.tqi.evolution.presentation.dtos.RequestBorrowingDTO;
 import br.com.tqi.evolution.presentation.dtos.RoleToClientDTO;
 import br.com.tqi.evolution.services.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ import java.util.stream.Collectors;
 public class ClientController {
     private final ClientService clientService;
 
+    @Value("${baseUrl}")
+    private String baseUrl;
+
     @GetMapping
     ResponseEntity<List<ClientDTO>> getClients () {
         List<Client> clients = clientService.getClients();
@@ -36,12 +41,12 @@ public class ClientController {
     @PostMapping
     ResponseEntity<ClientDTO> saveClient (@RequestBody Client client) {
         Client savedClient = clientService.saveClient(client);
-        URI uri = URI.create("http://localhost.com:8080/client/" + savedClient.getId());
+        URI uri = URI.create(baseUrl + "/client/" + savedClient.getId());
         return ResponseEntity.created(uri).body(new ClientDTO(savedClient));
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Client> getClient (Authentication authentication, @PathVariable Long id) {
+    ResponseEntity<ClientAllInfoDTO> getClient (Authentication authentication, @PathVariable Long id) {
         try {
             Client client = clientService.getClientById(id);
             Client clientWithMadeRequest = clientService.getClient((String) authentication.getPrincipal());
@@ -49,7 +54,7 @@ public class ClientController {
             if (!(roleNames.contains("ROLE_ADMIN") || client.getEmail().equals(authentication.getPrincipal()))) {
                 return ResponseEntity.status(403).build();
             }
-            return ResponseEntity.ok().body(client);
+            return ResponseEntity.ok().body(new ClientAllInfoDTO(client));
         } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }

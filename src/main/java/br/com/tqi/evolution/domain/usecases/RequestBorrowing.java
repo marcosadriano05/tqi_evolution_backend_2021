@@ -1,4 +1,4 @@
-package br.com.tqi.evolution.usecases;
+package br.com.tqi.evolution.domain.usecases;
 
 import br.com.tqi.evolution.domain.Borrow;
 
