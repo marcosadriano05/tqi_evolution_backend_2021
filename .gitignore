@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Folders from build and database ###
+database/
+*.jar

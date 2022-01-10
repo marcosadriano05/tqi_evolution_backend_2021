@@ -36,6 +36,34 @@ Ao se cadastrar, o client pode fazer o login e nele pedir empréstimos, esses em
 - Para regras de negócio, como o pedido de empréstimo, foi utilizado a metodologia de desenvolvimento TDD para gerar mais confiabilidade nas operações.
 - Banco de dados utilizado foi o Postgresql.
 - Para operações no banco, foi usada a especificação JPA.
+- Container Docker que utiliza as imagens do Postgres e Openjdk para rodar o projeto.
+
+## Como rodar o projeto
+
+### Localmente sem Docker
+
+- Java 11 JDK.
+- Postgres.
+- Maven.
+- No terminal, na pasta do projeto, rodar o comando:
+```shell
+./mvnw clean package -DskipTests
+```
+- Na pasta ./target será criado o arquivo com extensão jar.
+- Entre na pasta ./target e execute o comando:
+```shell
+java -jar {nome_do_arquivo_jar}
+```
+
+### Utilizando o Docker no terminal Bash
+
+- Maven para a build e geração do arquivo jar do projeto.
+- Docker.
+- Docker compose.
+- No terminal, na pasta do projeto, execute o script init.sh com o comando:
+```shell
+bash init.sh
+```
 
 ## Rotas
 
